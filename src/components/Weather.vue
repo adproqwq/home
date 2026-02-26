@@ -8,9 +8,8 @@
         weatherData.weather.winddirection?.endsWith("风")
           ? weatherData.weather.winddirection
           : weatherData.weather.winddirection + "风"
-      }}&nbsp;
+      }}{{ weatherData.weather.windpower }}&nbsp;
     </span>
-    <span class="sm-hidden">{{ weatherData.weather.windpower }}&nbsp;级</span>
   </div>
   <div class="weather" v-else>
     <span>天气数据获取失败</span>
@@ -56,18 +55,18 @@ const getWeatherData = async () => {
     // 获取地理位置信息
     if (!mainKey) {
       console.log("未配置，使用备用天气接口");
-      const result = await getOtherWeather();
+      const result = await getOtherWeather(import.meta.env.VITE_WEATHER_CITY);
       console.log(result);
-      const data = result.result;
+      const data = result.data;
       weatherData.adCode = {
-        city: data.city.City || "未知地区",
+        city: data.city || "未知地区",
         // adcode: data.city.cityId,
       };
       weatherData.weather = {
-        weather: data.condition.day_weather,
-        temperature: getTemperature(data.condition.min_degree, data.condition.max_degree),
-        winddirection: data.condition.day_wind_direction,
-        windpower: data.condition.day_wind_power,
+        weather: data.current.weather,
+        temperature: data.current.temp,
+        winddirection: data.current.wind,
+        windpower: data.current.windSpeed,
       };
     } else {
       // 获取 Adcode
